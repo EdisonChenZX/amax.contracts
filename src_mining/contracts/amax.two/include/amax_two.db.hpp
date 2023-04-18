@@ -47,8 +47,8 @@ struct CUSTODY_TBL_NAME("global") global_t {
     name                admin;
     time_point_sec      started_at;
     time_point_sec      ended_at;
-    asset               mine_token_total;
-    asset               mine_token_remained;
+    asset               mine_token_total = asset(0,SYS_SYMBOL);
+    asset               mine_token_remained = asset(0,SYS_SYMBOL);
     EOSLIB_SERIALIZE( global_t, (mine_token_contract)(admin)(started_at)(ended_at)(mine_token_total)(mine_token_remained) )
 };
 
