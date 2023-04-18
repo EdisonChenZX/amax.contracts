@@ -51,6 +51,7 @@ struct CUSTODY_TBL_NAME("global") global_t {
     asset               mine_token_remained;
     EOSLIB_SERIALIZE( global_t, (mine_token_contract)(admin)(started_at)(ended_at)(mine_token_total)(mine_token_remained) )
 };
+
 typedef eosio::singleton< "global"_n, global_t > global_singleton;
 
 } }
