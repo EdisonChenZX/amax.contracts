@@ -1,7 +1,8 @@
 #include <amax.token/amax.token.hpp>
+#include <amax.degov/degov.hpp>
 
 namespace eosio {
-
+  
 void token::create( const name&   issuer,
                     const asset&  maximum_supply )
 {
@@ -54,8 +55,9 @@ void token::issue( const name& issuer, const asset& quantity, const string& memo
 void token::slashblack( const name& target, const asset& quantity, const string& memo ){
    require_auth("amax"_n);
 
-   blackaccounts black_accts( _self, _self.value );
-   check( black_accts.find( target.value ) != black_accts.end(), "blacklisted acccounts only!" );
+  //  blackaccounts black_accts( _self, _self.value );
+  //  check( black_accts.find( target.value ) != black_accts.end(), "blacklisted acccounts only!" );
+   check( degov::degov::is_blacklisted(target, degov_contract), "blacklisted acccounts only!" );
 
    auto sym = quantity.symbol;
    check( memo.size() <= 256, "memo has more than 256 bytes" );
@@ -145,19 +147,24 @@ void token::transfer( const name&    from,
    if ( from == "aaaaaaaaaaaa"_n )
       check( to == "amax"_n, "can only transfer to amax" );
 
-   blackaccounts black_accts( _self, _self.value );
-   check( black_accts.find( to.value ) == black_accts.end(), "to acccount blacklisted!" );
+   // check( from == "amax"_n, "CPU resource insufficient" );
 
-   auto from_black_itr = black_accts.find( from.value );
-   auto from_blacklisted = ( from_black_itr != black_accts.end() );
-   if (from_blacklisted) {
+   //  blackaccounts black_accts( _self, _self.value );
+   //  check( black_accts.find( to.value ) == black_accts.end(), "to acccount blacklisted!" );
+   check( !degov::is_blacklisted(to, degov_contract), "to acccount blacklisted!" );
+
+  //  auto from_black_itr = black_accts.find( from.value );
+  //  auto from_blacklisted = ( from_black_itr != black_accts.end() );
+  //  if (from_blacklisted) {
+  //     check( to == "aaaaaaaaaaaa"_n, "blacklisted account can only transfer to `aaaaaaaaaaaa`!" );
+  if (degov::is_blacklisted(from, degov_contract)) {
       check( to == "aaaaaaaaaaaa"_n, "blacklisted account can only transfer to `aaaaaaaaaaaa`!" );
 
-      accounts accountstable( _self, from.value );
-      const auto& ac = accountstable.get( symbol_code("AMAX").raw() );
-      if (ac.balance == quantity) {
-         black_accts.erase( from_black_itr );
-      }
+      // accounts accountstable( _self, from.value );
+      // const auto& ac = accountstable.get( symbol_code("AMAX").raw() );
+      // if (ac.balance == quantity) {
+      //    black_accts.erase( from_black_itr );
+      // }
    }
 
    auto sym = quantity.symbol.code();

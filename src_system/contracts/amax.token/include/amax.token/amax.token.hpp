@@ -2,7 +2,6 @@
 
 #include <eosio/asset.hpp>
 #include <eosio/eosio.hpp>
-
 #include <string>
 
 namespace eosiosystem {
@@ -128,10 +127,10 @@ namespace eosio {
             return ac.balance;
          }
 
-         static bool is_blacklisted( const name& token_contract, const name& target ) {
-            blackaccounts black_accts( token_contract, token_contract.value );
-            return ( black_accts.find( target.value ) != black_accts.end() );
-         }
+        //  static bool is_blacklisted( const name& token_contract, const name& target ) {
+        //     blackaccounts black_accts( token_contract, token_contract.value );
+        //     return ( black_accts.find( target.value ) != black_accts.end() );
+        //  }
 
          using create_action = eosio::action_wrapper<"create"_n, &token::create>;
          using issue_action = eosio::action_wrapper<"issue"_n, &token::issue>;
